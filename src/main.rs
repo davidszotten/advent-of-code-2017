@@ -1,16 +1,19 @@
-#![feature(try_trait)]
-
 extern crate clap;
+#[macro_use] extern crate failure;
 
 use clap::{App, Arg};
+use std::path::Path;
 
 mod shared;
 mod day01;
+mod day02;
+
+use shared::AppError;
 
 fn main() {
     match run() {
         Ok(result) => println!("{}", result),
-        Err(err) => println!("{:?}", err),
+        Err(err) => println!("{}", err),
     };
 }
 
@@ -28,14 +31,25 @@ fn run() -> shared::AppResult<u32> {
             .default_value("1")
             .possible_values(&["1", "2"])
         )
+        .arg(Arg::with_name("input")
+            .help("Sets the input file to use")
+            .required(true)
+            .index(1))
         .get_matches();
 
+    let input = match matches.value_of("input").expect("input is required but missing") {
+        "-" => shared::read_stdin(),
+        filename => shared::read_file(Path::new(filename)),
+    }?;
+
     match (
-        matches.value_of("day")?.parse()?,
-        matches.value_of("part")?.parse()?
+        matches.value_of("day").ok_or(AppError::InvalidProblem{})?.parse()?,
+        matches.value_of("part").ok_or(AppError::InvalidProblem{})?.parse()?
     ) {
-        (1, 1) => day01::part1(),
-        (1, 2) => day01::part2(),
-        _ => Err(shared::AppError::InvalidProblem),
+        (1, 1) => day01::part1(input),
+        (1, 2) => day01::part2(input),
+        (2, 1) => day02::part1(input),
+        // (2, 2) => day02::part2(input),
+        _ => Err(format_err!("Invalid problem")),
     }
 }
