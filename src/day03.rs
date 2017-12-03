@@ -33,33 +33,54 @@ fn next(direction: &Direction) -> Direction {
 }
 
 
-fn find_coors(location: i32) -> (i32, i32) {
-    let location = location - 1;
-    let mut total_steps = 0;
-    let mut steps = 1;
-    let mut increment = false;
-    let mut direction = Direction::Right;
-    let mut position = (0, 0);
-    loop {
-        if  location == total_steps {
-            break position;
-        }
-        if  location < total_steps + steps {
-            steps = location - total_steps;
-        }
-        position = (
-            position.0 + steps * as_offset(&direction).0,
-            position.1 + steps * as_offset(&direction).1
-        );
-        total_steps += steps;
+#[derive(Debug)]
+struct Spiral {
+    increment: bool,
+    steps: i32,
+    length: i32,
+    direction: Direction,
+    position: (i32, i32),
+}
 
-        // next
-        direction = next(&direction);
-        if increment {
-            steps += 1;
+impl Spiral {
+    pub fn new() -> Self {
+        Spiral {
+            increment: true,
+            steps: 0,
+            length: 0,
+            direction: Direction::Down,
+            position: (0, 1),
         }
-        increment = !increment;
     }
+}
+
+impl Iterator for Spiral {
+    type Item = (i32, i32);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.position = (
+            self.position.0 + as_offset(&self.direction).0,
+            self.position.1 + as_offset(&self.direction).1
+        );
+
+        if self.steps == self.length {
+            self.steps = 1;
+            self.direction = next(&self.direction);
+            if self.increment {
+                self.length += 1;
+            }
+            self.increment = !self.increment;
+        } else {
+            self.steps += 1;
+        }
+        println!("{:?}", self);
+        Some(self.position)
+    }
+}
+
+
+fn find_coors(location: i32) -> (i32, i32) {
+    return Spiral::new().nth((location -1) as usize).expect("spiral should always have more");
 }
 
 fn distance(position: (i32, i32)) -> u32 {
@@ -67,7 +88,7 @@ fn distance(position: (i32, i32)) -> u32 {
 }
 
 
-pub fn part2(input: String) -> AppResult<u32> {
+pub fn part2(_input: String) -> AppResult<u32> {
     Ok(0)
 }
 
@@ -81,6 +102,27 @@ mod tests {
         assert_eq!(distance(find_coors(12)), 3);
         assert_eq!(distance(find_coors(23)), 2);
         assert_eq!(distance(find_coors(1024)), 31);
+    }
+
+    #[test]
+    fn test_spiral() {
+        println!("");
+        assert_eq!(Spiral::new().take(14).collect::<Vec<_>>(), vec![
+        (0, 0),
+        (1, 0),
+        (1, 1),
+        (0, 1),
+        (-1, 1),
+        (-1, 0),
+        (-1, -1),
+        (0, -1),
+        (1, -1),
+        (2, -1),
+        (2, 0),
+        (2, 1),
+        (2, 2),
+        (1, 2),
+    ])
     }
 
 //     #[test]
