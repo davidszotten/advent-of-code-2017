@@ -7,6 +7,7 @@ use std::path::Path;
 mod shared;
 mod day01;
 mod day02;
+mod day03;
 
 use shared::AppError;
 
@@ -49,7 +50,9 @@ fn run() -> shared::AppResult<u32> {
         (1, 1) => day01::part1(input),
         (1, 2) => day01::part2(input),
         (2, 1) => day02::part1(input),
-        // (2, 2) => day02::part2(input),
+        (2, 2) => day02::part2(input),
+        (3, 1) => day03::part1(input),
+        (3, 2) => day03::part2(input),
         _ => Err(format_err!("Invalid problem")),
     }
 }
