@@ -3,7 +3,6 @@ use shared::AppResult;
 pub fn part1(input: String) -> AppResult<u32> {
     let position: i32 = input.parse()?;
     let result = find_coors(position);
-    // println!("{:?}", result);
     Ok(distance(result))
 }
 
@@ -45,14 +44,9 @@ fn find_coors(location: i32) -> (i32, i32) {
         if  location == total_steps {
             break position;
         }
-        // println!("loc: {}, tot: {}, steps: {}", location, total_steps, steps);
         if  location < total_steps + steps {
-            // println!("loc: {} < tot + steps: {}", location, total_steps+ steps);
-            // println!("loc: {}, tot: {}", location, total_steps);
             steps = location - total_steps;
-            // println!("steps: {}", steps);
         }
-        // println!("{:?} {}", direction, steps);
         position = (
             position.0 + steps * as_offset(&direction).0,
             position.1 + steps * as_offset(&direction).1
