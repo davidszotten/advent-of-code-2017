@@ -9,14 +9,6 @@ use std::path::Path;
 
 use failure::Error;
 
-#[derive(Debug, Fail)]
-pub enum AppError {
-    #[fail(display = "Invalid problem")]
-    InvalidProblem {},
-    #[fail(display = "Parse error")]
-    ParseError,
-}
-
 pub type AppResult<T> = Result<T, Error>;
 
 

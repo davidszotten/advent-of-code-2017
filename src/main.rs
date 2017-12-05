@@ -10,8 +10,6 @@ mod day02;
 mod day03;
 mod day04;
 
-use shared::AppError;
-
 fn main() {
     match run() {
         Ok(result) => println!("{}", result),
@@ -45,8 +43,8 @@ fn run() -> shared::AppResult<u32> {
     }?;
 
     match (
-        matches.value_of("day").ok_or(AppError::InvalidProblem{})?.parse()?,
-        matches.value_of("part").ok_or(AppError::InvalidProblem{})?.parse()?
+        matches.value_of("day").ok_or(format_err!("Invalid day"))?.parse()?,
+        matches.value_of("part").ok_or(format_err!("Invalid part"))?.parse()?
     ) {
         (1, 1) => day01::part1(input),
         (1, 2) => day01::part2(input),
@@ -56,6 +54,8 @@ fn run() -> shared::AppResult<u32> {
         (3, 2) => day03::part2(input),
         (4, 1) => day04::part1(input),
         (4, 2) => day04::part2(input),
-        _ => Err(format_err!("Invalid problem")),
+        (d, 1) => bail!("Invalid problem `{}`", d),
+        (d, 2) => bail!("Invalid problem `{}`", d),
+        p => bail!("Invalid problem spec `{:?}`", p),
     }
 }

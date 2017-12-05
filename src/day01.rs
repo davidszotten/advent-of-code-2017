@@ -1,4 +1,4 @@
-use shared::{AppError, AppResult};
+use shared::AppResult;
 
 pub fn part1(input: String) -> AppResult<u32> {
     count_with_skip(input, 1)
@@ -16,7 +16,7 @@ fn count_with_skip(input: String, skip: usize) -> AppResult<u32> {
 
     for (a, b) in input.chars().zip(input.chars().cycle().skip(skip)) {
         if a == b {
-            sum += a.to_digit(10).ok_or(AppError::ParseError{})?;
+            sum += a.to_digit(10).ok_or(format_err!("Not a digit"))?;
         }
     }
     Ok(sum)
