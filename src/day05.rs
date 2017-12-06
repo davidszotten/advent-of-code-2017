@@ -1,6 +1,6 @@
 use shared::AppResult;
 
-pub fn part1(input: String) -> AppResult<u32> {
+pub fn part1(input: &str) -> AppResult<u32> {
     let mut instructions: Vec<i32> = input
         .split_whitespace()
         .filter_map(|x| x.parse().ok())
@@ -19,7 +19,7 @@ pub fn part1(input: String) -> AppResult<u32> {
 }
 
 
-pub fn part2(input: String) -> AppResult<u32> {
+pub fn part2(input: &str) -> AppResult<u32> {
     let mut instructions: Vec<i32> = input
         .split_whitespace()
         .filter_map(|x| x.parse().ok())

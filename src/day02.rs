@@ -3,7 +3,7 @@ use std::u32;
 use shared::{AppResult};
 
 
-pub fn part1(input: String) -> AppResult<u32> {
+pub fn part1(input: &str) -> AppResult<u32> {
     let mut sum = 0;
     for row in input.split('\n') {
         let values = row.split_whitespace()
@@ -18,7 +18,7 @@ pub fn part1(input: String) -> AppResult<u32> {
 }
 
 
-pub fn part2(input: String) -> AppResult<u32> {
+pub fn part2(input: &str) -> AppResult<u32> {
     let mut sum = 0;
     for row in input.split('\n') {
         let values = row.split_whitespace()
@@ -53,7 +53,7 @@ mod tests {
         let input = "5 1 9 5
 7 5 3
 2 4 6 8";
-    assert_eq!(part1(input.into()).expect("failed"), 18);
+    assert_eq!(part1(input).expect("failed"), 18);
     }
 
     #[test]
@@ -61,6 +61,6 @@ mod tests {
         let input = "5 9 2 8
 9 4 7 3
 3 8 6 5";
-    assert_eq!(part2(input.into()).expect("failed"), 9);
+    assert_eq!(part2(input).expect("failed"), 9);
     }
 }

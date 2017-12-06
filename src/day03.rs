@@ -44,7 +44,7 @@ impl ops::AddAssign for Position {
     }
 }
 
-pub fn part1(input: String) -> AppResult<u32> {
+pub fn part1(input: &str) -> AppResult<u32> {
     let position: i32 = input.parse()?;
     let result = find_coors(position);
     Ok(distance(result))
@@ -129,7 +129,7 @@ fn distance(position: Position) -> u32 {
 }
 
 
-pub fn part2(input: String) -> AppResult<u32> {
+pub fn part2(input: &str) -> AppResult<u32> {
     let max: i32 = input.parse()?;
     let mut values = HashMap::new();
     values.insert(Position::new(0, 0), 1);
@@ -180,12 +180,4 @@ mod tests {
         Position::new(1, 2),
     ])
     }
-
-//     #[test]
-//     fn test_part2() {
-//         let input = "5 9 2 8
-// 9 4 7 3
-// 3 8 6 5";
-//     assert_eq!(part2(input.into()).expect("failed"), 9);
-//     }
 }

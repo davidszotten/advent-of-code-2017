@@ -1,17 +1,17 @@
 use std::collections::HashMap;
 use shared::AppResult;
 
-pub fn part1(input: String) -> AppResult<u32> {
+pub fn part1(input: &str) -> AppResult<u32> {
     Ok(calculate(input).0)
 }
 
 
-pub fn part2(input: String) -> AppResult<u32> {
+pub fn part2(input: &str) -> AppResult<u32> {
     Ok(calculate(input).1)
 }
 
 
-fn calculate(input: String) -> (u32, u32) {
+fn calculate(input: &str) -> (u32, u32) {
     let mut banks: Vec<i32> = input
         .split_whitespace()
         .filter_map(|x| x.parse().ok())
@@ -53,11 +53,11 @@ mod tests {
 
     #[test]
     fn test_part1() {
-        assert_eq!(part1("0 2    7  0".into()).expect("failed"), 5);
+        assert_eq!(part1("0 2    7  0").expect("failed"), 5);
     }
 
     #[test]
     fn test_part2() {
-        assert_eq!(part2("0 2    7  0".into()).expect("failed"), 4);
+        assert_eq!(part2("0 2    7  0").expect("failed"), 4);
     }
 }

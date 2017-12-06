@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 use shared::AppResult;
 
-pub fn part1(input: String) -> AppResult<u32> {
+pub fn part1(input: &str) -> AppResult<u32> {
     let mut count = 0;
     'outer: for row in input.split('\n') {
         let mut seen = HashSet::new();
@@ -17,7 +17,7 @@ pub fn part1(input: String) -> AppResult<u32> {
 }
 
 
-pub fn part2(input: String) -> AppResult<u32> {
+pub fn part2(input: &str) -> AppResult<u32> {
     let mut count = 0;
     'outer: for row in input.split('\n') {
         let mut seen = HashSet::new();
@@ -42,14 +42,14 @@ mod tests {
 
     #[test]
     fn test_part1() {
-        assert_eq!(part1("aa bb cc dd ee".into()).expect("failed"), 1);
-        assert_eq!(part1("aa bb cc dd ee aa".into()).expect("failed"), 0);
+        assert_eq!(part1("aa bb cc dd ee").expect("failed"), 1);
+        assert_eq!(part1("aa bb cc dd ee aa").expect("failed"), 0);
     }
 
     #[test]
     fn test_part2() {
-        assert_eq!(part2("abcde fghij".into()).expect("failed"), 1);
-        assert_eq!(part2("abcde xyz ecdab".into()).expect("failed"), 0);
+        assert_eq!(part2("abcde fghij").expect("failed"), 1);
+        assert_eq!(part2("abcde xyz ecdab").expect("failed"), 0);
     }
 
 }
