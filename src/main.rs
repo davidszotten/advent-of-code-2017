@@ -34,7 +34,7 @@ fn run() -> shared::AppResult<u32> {
             .possible_values(&["1", "2"])
         )
         .arg(Arg::with_name("input")
-            .help("Sets the input file to use")
+            .help("Sets the input file to use, or `-` for stdin")
             .required(true)
             .index(1))
         .get_matches();
