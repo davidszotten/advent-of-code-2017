@@ -40,3 +40,27 @@ pub fn part2(input: &str) -> AppResult<u32> {
     }
     Ok(steps)
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_part1() {
+        assert_eq!(part1("0
+3
+0
+1
+-3").unwrap(), 5);
+    }
+
+    #[test]
+    fn test_part2() {
+        assert_eq!(part2("0
+3
+0
+1
+-3").unwrap(), 10);
+    }
+}
