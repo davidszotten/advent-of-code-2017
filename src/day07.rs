@@ -3,12 +3,12 @@ use nom::{IResult, alphanumeric, digit, space};
 
 use shared::AppResult;
 
-pub fn part1(input: String) -> AppResult<u32> {
+pub fn part1(_input: &str) -> AppResult<u32> {
     Ok(0)
 }
 
 
-pub fn part2(input: String) -> AppResult<u32> {
+pub fn part2(_input: &str) -> AppResult<u32> {
     Ok(0)
 }
 
@@ -40,15 +40,28 @@ named!(program <Program>,
         name: map_res!(alphanumeric, str::from_utf8) >>
         space >>
         weight: number >>
-        (Program{name: name.into(), weight: weight, children:vec![]})
+        names: opt!(
+            complete!(do_parse!(
+                tag!(" -> ") >>
+                names: separated_list!(
+                    tag!(", "),
+                    do_parse!(
+                        name: map_res!(alphanumeric, str::from_utf8) >>
+                        (name.into())
+                    )
+                ) >>
+                (names)
+            ))
+        ) >>
+        (Program{name: name.into(), weight: weight, children: names.unwrap_or(vec![])})
     )
 );
 
 
 
-fn bottom(input: &str) -> AppResult<&str> {
-    Ok("")
-}
+// fn bottom(input: &str) -> AppResult<&str> {
+//     Ok("")
+// }
 
 
 #[cfg(test)]
@@ -59,8 +72,11 @@ mod tests {
     fn test_program() {
         assert_eq!(
             program(&b"pbga (66)"[..]),
-            // program(&b"pbga"[..]),
             IResult::Done(&b""[..], Program{name: "pbga".into(), weight: 66, children: vec![]})
+        );
+        assert_eq!(
+            program(&b"fwft (72) -> ktlj, cntj, xhth"[..]),
+            IResult::Done(&b""[..], Program{name: "fwft".into(), weight: 72, children: vec!["ktlj".into(), "cntj".into(), "xhth".into()]})
         );
     }
 

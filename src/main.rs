@@ -65,6 +65,8 @@ fn run() -> shared::AppResult<u32> {
         (5, 2) => day05::part2(&input),
         (6, 1) => day06::part1(&input),
         (6, 2) => day06::part2(&input),
+        (7, 1) => day07::part1(&input),
+        (7, 2) => day07::part2(&input),
         (d, 1) => bail!("Invalid problem `{}`", d),
         (d, 2) => bail!("Invalid problem `{}`", d),
         p => bail!("Invalid problem spec `{:?}`", p),
