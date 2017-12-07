@@ -1,5 +1,5 @@
 use std::str::{self, FromStr};
-use nom::{IResult, alphanumeric, digit, space};
+use nom::{alphanumeric, digit, space};
 
 use shared::AppResult;
 
@@ -35,28 +35,31 @@ named!(number <u32>,
     )
 );
 
+named!(children <Vec<String>>,
+// named!(children <Vec<&str>>,
+    do_parse!(
+        // tag!(" -> ") >>
+        names: separated_list!(
+            complete!(tag!(", ")),
+            // map_res!(complete!(alphanumeric), |s| str::from_utf8)
+            do_parse!(
+                name: map_res!(complete!(alphanumeric), str::from_utf8) >>
+                (name.into())
+                )
+            ) >>
+        (names)
+    )
+);
+
+
 named!(program <Program>,
     do_parse!(
         name: map_res!(alphanumeric, str::from_utf8) >>
         space >>
         weight: number >>
-        names: //opt!(
-            // do_parse!(
-            complete!(do_parse!(
-                tag!(" -> ") >>
-                names: separated_list!(
-                    tag!(", "),
-                    do_parse!(
-                        name: map_res!(alphanumeric, str::from_utf8) >>
-                        (name.into())
-                    )
-                ) >>
-                // (vec!["foo".into()])
-                (names)
-            )//)
-        ) >>
+        opt!(complete!(tag!(" -> "))) >>
+        names: children >>
         (Program{name: name.into(), weight: weight, children: names})
-        // (Program{name: name.into(), weight: weight, children: names.unwrap_or(vec![])})
     )
 );
 
@@ -69,15 +72,28 @@ named!(program <Program>,
 
 #[cfg(test)]
 mod tests {
+    use nom::IResult;
     use super::*;
 
-    // #[test]
-    // fn test_program_no_children() {
-    //     assert_eq!(
-    //         program(&b"pbga (66)"[..]),
-    //         IResult::Done(&b""[..], Program{name: "pbga".into(), weight: 66, children: vec![]})
-    //     );
-    // }
+    #[test]
+    fn test_children() {
+        assert_eq!(
+            children(&b"foo, bar"[..]),
+            IResult::Done(&b""[..], vec!["foo".into(), "bar".into()]),
+        );
+        assert_eq!(
+            children(&b""[..]),
+            IResult::Done(&b""[..], vec![]),
+        );
+    }
+
+    #[test]
+    fn test_program_no_children() {
+        assert_eq!(
+            program(&b"pbga (66)"[..]),
+            IResult::Done(&b""[..], Program{name: "pbga".into(), weight: 66, children: vec![]})
+        );
+    }
 
     #[test]
     fn test_program_children() {
