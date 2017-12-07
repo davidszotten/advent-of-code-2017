@@ -1,9 +1,11 @@
+use std::collections::HashSet;
 use std::str::{self, FromStr};
-use nom::{alphanumeric, digit, space};
+use nom::{IResult, alphanumeric, digit, space};
 
 use shared::AppResult;
 
-pub fn part1(_input: &str) -> AppResult<u32> {
+pub fn part1(input: &str) -> AppResult<u32> {
+    println!("{:?}", bottom(input));
     Ok(0)
 }
 
@@ -13,7 +15,7 @@ pub fn part2(_input: &str) -> AppResult<u32> {
 }
 
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
 struct Program {
     name: String,
     weight: u32,
@@ -65,9 +67,25 @@ named!(program <Program>,
 
 
 
-// fn bottom(input: &str) -> AppResult<&str> {
-//     Ok("")
-// }
+fn bottom(input: &str) -> AppResult<String> {
+    let programs: Vec<Program> = input.split('\n')
+        .filter_map(|line| match program(line.as_bytes()) {
+            IResult::Done(_, p) => Some(p),
+            _ => None,
+        })
+        .collect();
+    let mut seen_left = HashSet::new();
+    let mut seen_right = HashSet::new();
+    for program in programs {
+        seen_left.insert(program.name);
+        for child in program.children {
+            seen_right.insert(child);
+        }
+    }
+    let bottom = seen_left.difference(&seen_right).next().expect("no bottom");
+    // !("{:?}", );
+    Ok(bottom.clone())
+}
 
 
 #[cfg(test)]
@@ -103,20 +121,20 @@ mod tests {
         );
     }
 
-//     #[test]
-//     fn test_bottom() {
-//         assert_eq!(bottom("pbga (66)
-// xhth (57)
-// ebii (61)
-// havc (66)
-// ktlj (57)
-// fwft (72) -> ktlj, cntj, xhth
-// qoyq (66)
-// padx (45) -> pbga, havc, qoyq
-// tknk (41) -> ugml, padx, fwft
-// jptl (61)
-// ugml (68) -> gyxo, ebii, jptl
-// gyxo (61)
-// cntj (57)").unwrap(), "tknk");
-//     }
+    #[test]
+    fn test_bottom() {
+        assert_eq!(bottom("pbga (66)
+xhth (57)
+ebii (61)
+havc (66)
+ktlj (57)
+fwft (72) -> ktlj, cntj, xhth
+qoyq (66)
+padx (45) -> pbga, havc, qoyq
+tknk (41) -> ugml, padx, fwft
+jptl (61)
+ugml (68) -> gyxo, ebii, jptl
+gyxo (61)
+cntj (57)").unwrap(), "tknk");
+    }
 }
