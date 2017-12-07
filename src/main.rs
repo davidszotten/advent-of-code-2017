@@ -1,5 +1,6 @@
 extern crate clap;
 #[macro_use] extern crate failure;
+#[macro_use] extern crate nom;
 
 use clap::{App, Arg};
 use std::path::Path;
@@ -11,6 +12,7 @@ mod day03;
 mod day04;
 mod day05;
 mod day06;
+mod day07;
 
 fn main() {
     match run() {
