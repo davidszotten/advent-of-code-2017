@@ -1,4 +1,5 @@
 use std::collections::{HashMap};
+use std::cmp;
 use std::str::{self, FromStr};
 use shared::AppResult;
 use nom::{IResult, alpha, digit, space};
@@ -97,8 +98,9 @@ fn condition(left: i32, op: ConditionOp, right: i32) -> bool {
     }
 }
 
-pub fn part1(input: &str) -> AppResult<u32> {
+pub fn process(input: &str) -> AppResult<(u32, u32)> {
     let mut registers = HashMap::new();
+    let mut maxduring = 0;
 
     for line in input.split('\n') {
         // println!("::{}::", line);
@@ -123,17 +125,26 @@ pub fn part1(input: &str) -> AppResult<u32> {
                 Operation::Decrement => {*register_value -= instruction.value}
             }
         }
+        maxduring = match registers.values().max() {
+            Some(&n) => cmp::max(maxduring, n),
+            None => maxduring,
+        };
     }
-    // println!("{:?}", registers);
-    match registers.values().max() {
-        Some(&n) => Ok(n as u32),
+    let maxend = match registers.values().max() {
+        Some(&n) => n as u32,
         None => bail!("no registers"),
-    }
+    };
+    Ok((maxend, maxduring as u32))
+}
+
+
+pub fn part1(input: &str) -> AppResult<u32> {
+    process(input).map(|(x, _)| x)
 }
 
 
 pub fn part2(input: &str) -> AppResult<u32> {
-    Ok(0)
+    process(input).map(|(_, y)| y)
 }
 
 
@@ -206,5 +217,13 @@ mod tests {
 a inc 1 if b < 5
 c dec -10 if a >= 1
 c inc -20 if c == 10").unwrap(), 1);
+    }
+
+    #[test]
+    fn test_part2() {
+        assert_eq!(part2("b inc 5 if a > 1
+a inc 1 if b < 5
+c dec -10 if a >= 1
+c inc -20 if c == 10").unwrap(), 10);
     }
 }
