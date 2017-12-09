@@ -1,5 +1,8 @@
+#![feature(universal_impl_trait)]
+
 extern crate clap;
 #[macro_use] extern crate failure;
+// extern crate itertools;
 #[macro_use] extern crate nom;
 
 use clap::{App, Arg};
@@ -14,6 +17,7 @@ mod day05;
 mod day06;
 mod day07;
 mod day08;
+mod day09;
 
 fn main() {
     match run() {
@@ -70,6 +74,8 @@ fn run() -> shared::AppResult<u32> {
         (7, 2) => day07::part2(&input),
         (8, 1) => day08::part1(&input),
         (8, 2) => day08::part2(&input),
+        (9, 1) => day09::part1(&input),
+        (9, 2) => day09::part2(&input),
         (d, 1) => bail!("Invalid problem `{}`", d),
         (d, 2) => bail!("Invalid problem `{}`", d),
         p => bail!("Invalid problem spec `{:?}`", p),
