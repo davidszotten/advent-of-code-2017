@@ -44,44 +44,21 @@ impl ops::AddAssign for Coor {
     }
 }
 
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
-enum Direction {
-    North,
-    NorthEast,
-    NorthWest,
-    South,
-    SouthEast,
-    SouthWest,
-}
-
-impl Direction {
-    fn as_coor(&self) -> Coor {
-        use self::Direction::*;
-        match *self {
-            North => Coor::new(0, 1, -1),
-            South => Coor::new(0, -1, 1),
-            NorthEast => Coor::new(1, 0, -1),
-            NorthWest => Coor::new(-1, 1, 0),
-            SouthEast => Coor::new(1, -1, 0),
-            SouthWest => Coor::new(-1, 0, 1),
-        }
-    }
-}
-
-impl FromStr for Direction {
+impl FromStr for Coor {
     type Err = Error;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Ok(match s {
-            "ne" => Direction::NorthEast,
-            "nw" => Direction::NorthWest,
-            "se" => Direction::SouthEast,
-            "sw" => Direction::SouthWest,
-            "n" => Direction::North,
-            "s" => Direction::South,
+            "n" => Coor::new(0, 1, -1),
+            "ne" => Coor::new(1, 0, -1),
+            "nw" => Coor::new(-1, 1, 0),
+            "s" => Coor::new(0, -1, 1),
+            "se" => Coor::new(1, -1, 0),
+            "sw" => Coor::new(-1, 0, 1),
             _ => bail!("invalid direction"),
         })
     }
 }
+
 
 pub fn part1(input: &str) -> AppResult<u32> {
     walk(input).map(|c| c.distance())
@@ -89,27 +66,27 @@ pub fn part1(input: &str) -> AppResult<u32> {
 
 
 fn walk(input: &str) -> AppResult<Coor> {
-    let directions: Vec<Direction> = input
+    let directions: Vec<Coor> = input
         .split(',')
         .filter_map(|s| s.parse().ok())
         .collect();
     let mut start = Coor::new(0, 0, 0);
     for direction in directions {
-        start += direction.as_coor();
+        start += direction;
     }
     Ok(start)
 }
 
 
 pub fn part2(input: &str) -> AppResult<u32> {
-    let directions: Vec<Direction> = input
+    let directions: Vec<Coor> = input
         .split(',')
         .filter_map(|s| s.parse().ok())
         .collect();
     let mut start = Coor::new(0, 0, 0);
     let mut furthest = 0;
     for direction in directions {
-        start += direction.as_coor();
+        start += direction;
         furthest = max(furthest, start.distance());
     }
     Ok(furthest)
