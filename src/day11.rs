@@ -29,6 +29,10 @@ impl Coor {
         Coor{x, y, z}
     }
 
+    fn zero() -> Self {
+        Coor::new(0, 0, 0)
+    }
+
     fn distance(&self) -> u32 {
         max(max(self.x.abs(), self.y.abs()), self.z.abs()) as u32
     }
@@ -41,6 +45,17 @@ impl ops::AddAssign for Coor {
             self.y + rhs.y,
             self.z + rhs.z,
         );
+    }
+}
+
+impl ops::Add for Coor {
+    type Output = Coor;
+    fn add(self, rhs: Coor) -> Self::Output {
+        Coor::new(
+            self.x + rhs.x,
+            self.y + rhs.y,
+            self.z + rhs.z,
+        )
     }
 }
 
@@ -61,34 +76,24 @@ impl FromStr for Coor {
 
 
 pub fn part1(input: &str) -> AppResult<u32> {
-    walk(input).map(|c| c.distance())
-}
-
-
-fn walk(input: &str) -> AppResult<Coor> {
-    let directions: Vec<Coor> = input
+    Ok(input
         .split(',')
-        .filter_map(|s| s.parse().ok())
-        .collect();
-    let mut start = Coor::new(0, 0, 0);
-    for direction in directions {
-        start += direction;
-    }
-    Ok(start)
+        .filter_map(|c| c.parse::<Coor>().ok())
+        .fold(Coor::zero(), |acc, c| acc + c)
+        .distance()
+    )
 }
 
 
 pub fn part2(input: &str) -> AppResult<u32> {
-    let directions: Vec<Coor> = input
-        .split(',')
-        .filter_map(|s| s.parse().ok())
-        .collect();
-    let mut start = Coor::new(0, 0, 0);
+    let mut pos = Coor::zero();
     let mut furthest = 0;
-    for direction in directions {
-        start += direction;
-        furthest = max(furthest, start.distance());
-    }
+    for coor in input
+        .split(',')
+        .filter_map(|c| c.parse::<Coor>().ok()) {
+            pos += coor;
+            furthest = max(furthest, pos.distance());
+        }
     Ok(furthest)
 }
 
@@ -98,15 +103,18 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_walk() {
-        assert_eq!(walk("ne,ne,ne").unwrap().distance(), 3);
-        assert_eq!(walk("ne,ne,sw,sw").unwrap().distance(), 0);
-        assert_eq!(walk("ne,ne,s,s").unwrap().distance(), 2);
-        assert_eq!(walk("se,sw,se,sw,sw").unwrap().distance(), 3);
+    fn test_part1() {
+        assert_eq!(part1("ne,ne,ne").unwrap(), 3);
+        assert_eq!(part1("ne,ne,sw,sw").unwrap(), 0);
+        assert_eq!(part1("ne,ne,s,s").unwrap(), 2);
+        assert_eq!(part1("se,sw,se,sw,sw").unwrap(), 3);
     }
 
     #[test]
-    fn test_part1() {
-        assert_eq!(part1("").unwrap(), 0);
+    fn test_part2() {
+        assert_eq!(part2("ne,ne,ne").unwrap(), 3);
+        assert_eq!(part2("ne,ne,sw,sw").unwrap(), 2);
+        assert_eq!(part2("ne,ne,s,s").unwrap(), 2);
+        assert_eq!(part2("se,sw,se,sw,sw").unwrap(), 3);
     }
 }
