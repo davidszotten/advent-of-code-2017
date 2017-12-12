@@ -63,13 +63,7 @@ fn hash(input: &str) -> String {
 }
 
 fn dense(bytes: &mut Iter<usize>) -> String {
-    let mut result = *bytes.next().expect("list is empty");
-    for _ in 0..15 {
-        let next = *bytes.next().expect("list is too short");
-        // println!("{:x}, {:x}", result, next);
-        result ^= next;
-    }
-    // println!("final: {:x}", result);
+    let result = bytes.take(16).fold(0, |x, y| x ^ y);
     let hex = if result < 0x10 {
         format!("0{:x}", result)
     } else {
