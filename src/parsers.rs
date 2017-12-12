@@ -1,7 +1,7 @@
 use std::str::{self, FromStr};
 use nom::digit;
 
-named!(number <i32>,
+named!(pub positive_integer <u32>,
     map_res!(
         map_res!(digit, str::from_utf8),
         FromStr::from_str
@@ -12,10 +12,10 @@ named!(number <i32>,
 named!(pub integer <i32>,
     do_parse!(
         negative: opt!(complete!(tag!("-"))) >>
-        number: number >>
+        number: positive_integer >>
         (match negative {
-            None => number,
-            Some(_) => -number,
+            None => number as i32,
+            Some(_) => -(number as i32),
         })
     )
 );
@@ -27,15 +27,15 @@ mod tests {
     use nom::IResult;
 
     #[test]
-    fn test_number() {
+    fn test_positive_integer() {
         assert_eq!(
-            number(&b"42"[..]),
+            positive_integer(&b"42"[..]),
             IResult::Done(&b""[..], 42)
         );
     }
 
     #[test]
-    fn test_positive_integer() {
+    fn test_integer_positive() {
         assert_eq!(
             integer(&b"42"[..]),
             IResult::Done(&b""[..], 42)
@@ -43,7 +43,7 @@ mod tests {
     }
 
     #[test]
-    fn test_negative_integer() {
+    fn test_integer_negative() {
         assert_eq!(
             integer(&b"-42"[..]),
             IResult::Done(&b""[..], -42)
