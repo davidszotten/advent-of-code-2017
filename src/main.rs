@@ -8,6 +8,7 @@ extern crate clap;
 use clap::{App, Arg};
 use std::path::Path;
 
+mod parsers;
 mod shared;
 mod day01;
 mod day02;

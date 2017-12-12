@@ -1,8 +1,9 @@
 use std::collections::{HashMap};
 use std::cmp;
-use std::str::{self, FromStr};
+use std::str;
+use parsers::integer;
 use shared::AppResult;
-use nom::{IResult, alpha, digit, space};
+use nom::{IResult, alpha, space};
 
 
 #[derive(Debug, PartialEq)]
@@ -30,26 +31,6 @@ struct Program {
     condition_op: ConditionOp,
     condition_value: i32,
 }
-
-
-named!(number <i32>,
-    map_res!(
-        map_res!(digit, str::from_utf8),
-        FromStr::from_str
-    )
-);
-
-
-named!(integer <i32>,
-    do_parse!(
-        negative: opt!(complete!(tag!("-"))) >>
-        number: number >>
-        (match negative {
-            None => number,
-            Some(_) => -number,
-        })
-    )
-);
 
 
 named!(program <Program>,
@@ -154,30 +135,6 @@ pub fn part2(input: &str) -> AppResult<u32> {
 mod tests {
     use super::*;
     use nom::IResult;
-
-    #[test]
-    fn test_number() {
-        assert_eq!(
-            number(&b"42"[..]),
-            IResult::Done(&b""[..], 42)
-        );
-    }
-
-    #[test]
-    fn test_positive_integer() {
-        assert_eq!(
-            integer(&b"42"[..]),
-            IResult::Done(&b""[..], 42)
-        );
-    }
-
-    #[test]
-    fn test_negative_integer() {
-        assert_eq!(
-            integer(&b"-42"[..]),
-            IResult::Done(&b""[..], -42)
-        );
-    }
 
     #[test]
     fn test_program() {
