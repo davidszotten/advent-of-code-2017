@@ -1,5 +1,4 @@
 use shared::AppResult;
-use std::slice::Iter;
 
 pub fn part1(input: &str) -> AppResult<u32> {
     Ok(do_part1(input, 256))
@@ -54,22 +53,13 @@ fn hash(input: &str) -> String {
     let list_len = list.len();
 	let list = step(list, list_len - pos);
 
-    let mut bytes = list.iter();
-    let mut parts = String::new();
-    for _ in 0..16 {
-        parts.push_str(&dense(&mut bytes));
-    }
-    parts
+    dense(list)
 }
 
-fn dense(bytes: &mut Iter<usize>) -> String {
-    let result = bytes.take(16).fold(0, |x, y| x ^ y);
-    let hex = if result < 0x10 {
-        format!("0{:x}", result)
-    } else {
-        format!("{:x}", result)
-    };
-    hex
+fn dense(bytes: Vec<usize>) -> String {
+    bytes.chunks(16).map(
+        |chunk| format!("{:02x}", chunk.iter().fold(0, |x, y| x ^ y))
+    ).collect()
 }
 
 
@@ -143,7 +133,7 @@ mod tests {
 
     #[test]
     fn test_dense() {
-        assert_eq!(dense(&mut [65, 27, 9, 1, 4, 3, 40, 50, 91, 7, 6, 0, 2, 5, 68, 22].iter()), "40");
+        assert_eq!(dense(vec![65, 27, 9, 1, 4, 3, 40, 50, 91, 7, 6, 0, 2, 5, 68, 22]), "40");
     }
 
     #[test]
