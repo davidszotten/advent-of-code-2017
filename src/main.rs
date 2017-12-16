@@ -11,6 +11,7 @@ use clap::{App, Arg};
 use std::path::Path;
 
 mod parsers;
+mod position;
 mod shared;
 mod day01;
 mod day02;
@@ -25,6 +26,7 @@ mod day10;
 mod day11;
 mod day12;
 mod day13;
+mod day14;
 
 fn main() {
     match run() {
@@ -91,6 +93,8 @@ fn run() -> shared::AppResult<u32> {
         (12, 2) => day12::part2(&input),
         (13, 1) => day13::part1(&input),
         (13, 2) => day13::part2(&input),
+        (14, 1) => day14::part1(&input),
+        (14, 2) => day14::part2(&input),
         (d, 1) => bail!("Invalid problem `{}`", d),
         (d, 2) => bail!("Invalid problem `{}`", d),
         p => bail!("Invalid problem spec `{:?}`", p),

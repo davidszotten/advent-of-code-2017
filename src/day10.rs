@@ -35,7 +35,7 @@ fn do_part1(input: &str, length: usize) -> u32 {
     list[list_size + 1 - pos % list_size] as u32
 }
 
-fn hash(input: &str) -> String {
+pub fn sparse(input: &str) -> Vec<usize> {
     let mut list: Vec<usize> = (0..256).collect();
 
     let lengths = setup(input);
@@ -51,9 +51,12 @@ fn hash(input: &str) -> String {
     }
     // println!("{:?}", list);
     let list_len = list.len();
-	let list = step(list, list_len - pos);
+    let list = step(list, list_len - pos);
+    list
+}
 
-    dense(list)
+fn hash(input: &str) -> String {
+    dense(sparse(input))
 }
 
 fn dense(bytes: Vec<usize>) -> String {
