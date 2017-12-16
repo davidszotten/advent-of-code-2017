@@ -76,6 +76,9 @@ fn run(input: &str, programs: &str) -> String {
     // println!("{:?}", parse(input));
     for mv in parse(input) {
         match mv {
+            // Move::Spin(n) => {},
+            // Move::Exchange(a, b) => {},
+            // Move::Partner(a, b) => {}
             Move::Spin(n) => {programs = do_spin(programs, n)},
             Move::Exchange(a, b) => {programs = do_exchange(programs, a, b)},
             Move::Partner(a, b) => {programs = do_partner(programs, a, b)},
@@ -90,14 +93,43 @@ pub fn part1(input: &str) -> AppResult<u32> {
     Ok(0)
 }
 
+/*
 
-pub fn part2(input: &str) -> AppResult<u32> {
-    let mut program: String = "abcdefghijklmnop".into();
-    // for _ in 0..1_000_000_000 {
-    for _ in 0..1_000_00 {
-        program = run(input, &program);
-    }
-    println!("{}", &program);
+abcde
+eabdc
+
+(a e c b)^2 = (a c)(b e)
+abcde
+ceadb
+
+perm:
+
+abcdefghijklmnop
+mkangclhfjodpbei
+
+6, 8
+1b % 6 == 4
+(a m p i f c)(b k o e g l d n)
+
+(a m p i f c)^4 = (a f p)(m c i)
+
+
+abcdefghijklmnop
+fbidepghmjklcnoa
+
+
+name:
+
+abcdefghijklmnop
+eojicpagblmnhfkd
+
+16
+1b % 16 == 0
+(a e c j l m f p d i b o k m h g)
+
+*/
+
+pub fn part2(_input: &str) -> AppResult<u32> {
     Ok(0)
 }
 
