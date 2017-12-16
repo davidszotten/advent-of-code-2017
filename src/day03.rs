@@ -1,48 +1,6 @@
 use shared::AppResult;
+use position::Position;
 use std::collections::HashMap;
-use std::ops;
-
-#[derive(Debug, PartialEq, Eq, Hash, Copy, Clone)]
-struct Position {
-    x: i32,
-    y: i32,
-}
-
-impl Position {
-    fn new(x: i32, y: i32) -> Self {
-        Position{x, y}
-    }
-
-    fn neighbours(self) -> Vec<Position> {
-        let mut result = vec![];
-        for &x in [-1, 0, 1].iter() {
-            for &y in [-1, 0, 1].iter() {
-                result.push(self + Position::new(x, y));
-            }
-        }
-        result
-    }
-}
-
-impl ops::Add for Position {
-    type Output = Position;
-
-    fn add(self, other: Position) -> Position {
-        Position {
-            x: self.x + other.x,
-            y: self.y + other.y,
-        }
-    }
-}
-
-impl ops::AddAssign for Position {
-    fn add_assign(&mut self, other: Position) {
-        *self = Position {
-            x: self.x + other.x,
-            y: self.y + other.y,
-        };
-    }
-}
 
 pub fn part1(input: &str) -> AppResult<u32> {
     let position: i32 = input.parse()?;
