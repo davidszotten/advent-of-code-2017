@@ -103,7 +103,7 @@ mod tests {
         assert_eq!(part1("flqrgnkx").unwrap(), 8108);
     }
 
-    #[test]
+    #[test] #[ignore]
     fn test_get_coors() {
         let coors = get_coors("flqrgnkx");
         assert_eq!(
@@ -121,7 +121,7 @@ mod tests {
         4);
     }
 
-    #[test]
+    #[test] #[ignore]
     fn test_part2() {
         assert_eq!(part2("flqrgnkx").unwrap(), 1242);
     }

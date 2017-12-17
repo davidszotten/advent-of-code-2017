@@ -57,12 +57,12 @@ pub fn part2(_input: &str) -> AppResult<u32> {
 mod tests {
     use super::*;
 
-    #[test]
+    #[test] #[ignore]
     fn test_do_rounds() {
         assert_eq!(do_rounds(65, 8921), 588);
     }
 
-    #[test]
+    #[test] #[ignore]
     fn test_do_rounds_v2() {
         assert_eq!(do_rounds_v2(65, 8921), 309);
     }
