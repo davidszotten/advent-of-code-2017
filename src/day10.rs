@@ -74,13 +74,8 @@ fn do_round(
     let list_len = list.len();
     for length in lengths {
 
-        // println!("{:?}, {}", list, length);
-        list = reverse(list, *length % list_len);
-        // println!("a {}/{}", *length, list_len);
-        list = step(list, *length % list_len);
-        // println!("b {}/{}", skip, list_len);
-        list = step(list, skip % list_len);
-        // println!("c");
+        list[..*length % list_len].reverse();
+        list.rotate((*length + skip) % list_len);
         pos += length + skip;
         skip += 1;
     }
@@ -95,17 +90,14 @@ fn do_round(
 
 
 fn reverse(mut list: Vec<usize>, length: usize) -> Vec<usize> {
-    let mut end = list.split_off(length);
-    list.reverse();
-    list.append(&mut end);
+    list[..length].reverse();
     list
 }
 
 
 fn step(mut list: Vec<usize>, step: usize) -> Vec<usize> {
-    let mut end = list.split_off(step);
-    end.append(&mut list);
-    end
+    list.rotate(step);
+    list
 }
 
 

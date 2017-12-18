@@ -1,6 +1,8 @@
 #![feature(conservative_impl_trait)]
 #![feature(match_default_bindings)]
+#![feature(slice_rotate)]
 #![feature(universal_impl_trait)]
+
 
 extern crate clap;
 #[macro_use] extern crate failure;
