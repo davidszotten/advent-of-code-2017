@@ -89,12 +89,6 @@ fn do_round(
 }
 
 
-fn reverse(mut list: Vec<usize>, length: usize) -> Vec<usize> {
-    list[..length].reverse();
-    list
-}
-
-
 fn step(mut list: Vec<usize>, step: usize) -> Vec<usize> {
     list.rotate(step);
     list
