@@ -33,6 +33,7 @@ mod day15;
 mod day16;
 mod day17;
 mod day18;
+mod day19;
 
 fn main() {
     match run() {
@@ -109,6 +110,8 @@ fn run() -> shared::AppResult<u32> {
         (17, 2) => day17::part2(&input),
         (18, 1) => day18::part1(&input),
         (18, 2) => day18::part2(&input),
+        (19, 1) => day19::part1(&input),
+        (19, 2) => day19::part2(&input),
         (d, 1) => bail!("Invalid problem `{}`", d),
         (d, 2) => bail!("Invalid problem `{}`", d),
         p => bail!("Invalid problem spec `{:?}`", p),
