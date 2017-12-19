@@ -100,11 +100,6 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_reverse() {
-        assert_eq!(reverse(vec![0, 1, 2, 3, 4], 2), vec![1, 0, 2, 3, 4]);
-    }
-
-    #[test]
     fn test_step() {
         assert_eq!(step(vec![0, 1, 2, 3, 4], 2), vec![2, 3, 4, 0, 1]);
         assert_eq!(step(vec![0, 1, 2, 3, 4], 4), vec![4, 0, 1, 2, 3]);
