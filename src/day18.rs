@@ -360,7 +360,7 @@ jgz a -2";
         ]);
     }
 
-    #[test]
+    #[test] #[ignore]
     fn test_part2() {
         assert_eq!(part2("snd 1
 snd 2
