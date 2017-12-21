@@ -225,7 +225,7 @@ mod tests {
 p=<4,0,0>, v=<0,0,0>, a=<-2,0,0>").unwrap(), 0);
     }
 
-    #[test]
+    #[test] #[ignore]
     fn test_part2() {
         assert_eq!(part2("p=<-6,0,0>, v=<3,0,0>, a=<0,0,0>
 p=<-4,0,0>, v=<2,0,0>, a=<0,0,0>
