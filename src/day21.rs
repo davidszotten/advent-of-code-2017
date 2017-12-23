@@ -89,12 +89,12 @@ impl Pattern {
     }
 
     pub fn replace(&self, replacements: &HashMap<Pattern, Pattern>) -> Pattern {
-        println!("looking for {}", self.as_str());
+        // println!("looking for {}", self.as_str());
         for (key, ref value) in replacements.iter() {
             // println!("next: {}", key.as_str());
             let mut possibility = self.clone();
             for _ in 0..3 {
-                println!("trying {}", possibility.as_str());
+                // println!("trying {}", possibility.as_str());
                 if possibility == *key || possibility.fliplr() == *key || possibility.flipud() == *key {
                     // println!("found match");
                     return (*value).clone();
@@ -132,11 +132,10 @@ fn parse(input: &str) -> HashMap<Pattern,Pattern> {
     patterns
 }
 
-
-pub fn part1(input: &str) -> AppResult<u32> {
+fn run(input: &str, iterations: usize) -> u32 {
     let replacements = parse(input);
     let mut current = Pattern::from_str(START);
-    for _ in 0..5 {
+    for _ in 0..iterations {
         println!("current: {}", current.as_str());
         // let foo = Pattern::from_str("#..#/..../..../#..#");
         let side_length = if current.source.len() % 2 == 0 {2} else {3};
@@ -147,20 +146,17 @@ pub fn part1(input: &str) -> AppResult<u32> {
         current = Pattern::combine(parts);
         // println!("{:?}", parts);
     }
-    Ok(current.count())
+    current.count()
 }
 
-/*
 
-#.#.
-###.
-.#..
-#.##
+pub fn part1(input: &str) -> AppResult<u32> {
+    Ok(run(input, 5))
+}
 
-*/
 
-pub fn part2(_input: &str) -> AppResult<u32> {
-    Ok(0)
+pub fn part2(input: &str) -> AppResult<u32> {
+    Ok(run(input, 18))
 }
 
 
@@ -210,7 +206,7 @@ mod tests {
     #[test]
     fn test_part1() {
         println!("");
-        assert_eq!(part1("../.# => ##./#../...
-.#./..#/### => #..#/..../..../#..#").unwrap(), 12);
+        assert_eq!(run("../.# => ##./#../...
+.#./..#/### => #..#/..../..../#..#", 2), 12);
     }
 }
