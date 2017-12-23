@@ -1,5 +1,5 @@
-use nom::{IResult, alpha};
-use parsers::integer;
+use nom::IResult;
+use tablet::{Op, Reg, Target, parse_op};
 use shared::AppResult;
 use std::collections::HashMap;
 use std::sync::mpsc::{Sender, Receiver};
@@ -7,88 +7,6 @@ use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
 
-
-type Reg = char;
-
-
-#[derive(Debug, PartialEq, Clone)]
-enum Target {
-    Value(i64),
-    Register(Reg),
-}
-
-#[derive(Debug, PartialEq, Clone)]
-enum Op {
-    Snd(Target),
-    Set(Reg, Target),
-    Add(Reg, Target),
-    Mul(Reg, Target),
-    Mod(Reg, Target),
-    Rcv(Reg),
-    Jgz(Target, Target),
-}
-
-named!(parse_op <Op>,
-    alt!(
-        parse_snd |
-        parse_set |
-        parse_add |
-        parse_mul |
-        parse_mod |
-        parse_rcv |
-        parse_jgz
-    )
-);
-
-named!(parse_target <Target>,
-    alt!(
-        alpha => {|r: &[u8]| Target::Register(r[0] as Reg)} |
-        integer => {|n| Target::Value(n as i64) }
-    )
-);
-
-named!(parse_target_value <(Reg, Target)>,
-    do_parse!(
-        x: map!(alpha, |r: &[u8]| r[0] as Reg) >>
-        tag!(" ") >>
-        y: parse_target >>
-        ((x, y))
-    )
-);
-
-named!(parse_snd <Op>,
-    map!(preceded!(tag!("snd "), parse_target), |t| Op::Snd(t))
-);
-
-named!(parse_set <Op>,
-    map!(preceded!(tag!("set "), parse_target_value), |tv| Op::Set(tv.0, tv.1))
-);
-
-named!(parse_add <Op>,
-    map!(preceded!(tag!("add "), parse_target_value), |tv| Op::Add(tv.0, tv.1))
-);
-
-named!(parse_mul <Op>,
-    map!(preceded!(tag!("mul "), parse_target_value), |tv| Op::Mul(tv.0, tv.1))
-);
-
-named!(parse_mod <Op>,
-    map!(preceded!(tag!("mod "), parse_target_value), |tv| Op::Mod(tv.0, tv.1))
-);
-
-named!(parse_rcv <Op>,
-    map!(preceded!(tag!("rcv "), alpha), |r: &[u8]| Op::Rcv(r[0] as Reg))
-);
-
-named!(parse_jgz <Op>,
-    do_parse!(
-        tag!("jgz ") >>
-        x: parse_target >>
-        tag!(" ") >>
-        y: parse_target >>
-        (Op::Jgz(x, y))
-    )
-);
 
 struct Program {
     _pid: i64,
@@ -141,6 +59,8 @@ impl Program {
                         Err(e) => {println!("failed to send: {:?}", e);},
                     };
                 },
+                Sub(_, _) => {}, // not used
+                Jnz(_, _) => {}, // not used
                 Set(reg, t) => {
                     let value = self.resolve(&t);
                     self.registers.insert(*reg, value);
@@ -206,6 +126,8 @@ fn run(program: &[Op]) -> i64 {
                 let tval = resolve(&t, &registers);
                 registers.insert(*x, xval + tval);
             },
+            Sub(_, _) => {}, // not used
+            Jnz(_, _) => {}, // not used
             Mul(x, t) => {
                 let xval = resolve(&Register(*x), &registers);
                 let tval = resolve(&t, &registers);

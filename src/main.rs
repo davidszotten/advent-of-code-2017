@@ -16,6 +16,7 @@ mod direction;
 mod parsers;
 mod position;
 mod shared;
+mod tablet;
 mod day01;
 mod day02;
 mod day03;
@@ -38,6 +39,7 @@ mod day19;
 mod day20;
 mod day21;
 mod day22;
+mod day23;
 
 fn main() {
     match run() {
@@ -122,6 +124,8 @@ fn run() -> shared::AppResult<u32> {
         (21, 2) => day21::part2(&input),
         (22, 1) => day22::part1(&input),
         (22, 2) => day22::part2(&input),
+        (23, 1) => day23::part1(&input),
+        (23, 2) => day23::part2(&input),
         (d, 1) => bail!("Invalid problem `{}`", d),
         (d, 2) => bail!("Invalid problem `{}`", d),
         p => bail!("Invalid problem spec `{:?}`", p),
