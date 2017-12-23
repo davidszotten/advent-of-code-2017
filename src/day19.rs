@@ -1,3 +1,4 @@
+use direction::{Direction, Location};
 use shared::AppResult;
 use position::Position;
 
@@ -14,39 +15,6 @@ impl Map {
     pub fn get(&self, position: Position) -> char {
         self.map[position.y as usize][position.x as usize]
     }
-}
-
-
-#[derive(Debug, PartialEq, Clone)]
-enum Direction {
-    Down,
-    Left,
-    Right,
-    Up,
-}
-
-impl Direction {
-    fn as_offset(&self) -> Position {
-        use self::Direction::*;
-        match *self {
-            Down => Position::new(0, 1),
-            Left => Position::new(-1, 0),
-            Right => Position::new(1, 0),
-            Up => Position::new(0, -1),
-        }
-    }
-
-    fn is_vertical(&self) -> bool {
-        use self::Direction::*;
-        *self == Up || *self == Down
-    }
-
-}
-
-#[derive(Debug, PartialEq, Clone)]
-struct Location {
-    position: Position,
-    direction: Direction,
 }
 
 

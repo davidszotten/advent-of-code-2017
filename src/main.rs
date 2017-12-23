@@ -12,6 +12,7 @@ extern crate clap;
 use clap::{App, Arg};
 use std::path::Path;
 
+mod direction;
 mod parsers;
 mod position;
 mod shared;
@@ -36,6 +37,7 @@ mod day18;
 mod day19;
 mod day20;
 mod day21;
+mod day22;
 
 fn main() {
     match run() {
@@ -118,6 +120,8 @@ fn run() -> shared::AppResult<u32> {
         (20, 2) => day20::part2(&input),
         (21, 1) => day21::part1(&input),
         (21, 2) => day21::part2(&input),
+        (22, 1) => day22::part1(&input),
+        (22, 2) => day22::part2(&input),
         (d, 1) => bail!("Invalid problem `{}`", d),
         (d, 2) => bail!("Invalid problem `{}`", d),
         p => bail!("Invalid problem spec `{:?}`", p),
