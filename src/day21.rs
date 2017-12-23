@@ -135,8 +135,9 @@ fn parse(input: &str) -> HashMap<Pattern,Pattern> {
 fn run(input: &str, iterations: usize) -> u32 {
     let replacements = parse(input);
     let mut current = Pattern::from_str(START);
-    for _ in 0..iterations {
-        println!("current: {}", current.as_str());
+    println!("current: {}", current.as_str());
+    for it in 0..iterations {
+        println!("iteration: {}", it);
         // let foo = Pattern::from_str("#..#/..../..../#..#");
         let side_length = if current.source.len() % 2 == 0 {2} else {3};
         // println!("{:?}", current.split(side_length));
