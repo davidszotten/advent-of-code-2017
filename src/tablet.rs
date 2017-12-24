@@ -101,3 +101,70 @@ named!(parse_jnz <Op>,
         (Op::Jnz(x, y))
     )
 );
+
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use nom::IResult;
+
+    #[test]
+    fn test_parse_snd() {
+        assert_eq!(
+            parse_snd(&b"snd 5"[..]),
+            IResult::Done(&b""[..], Op::Snd(Target::Value(5)))
+        );
+        assert_eq!(
+            parse_snd(&b"snd a"[..]),
+            IResult::Done(&b""[..], Op::Snd(Target::Register('a')))
+        );
+    }
+
+    #[test]
+    fn test_parse_set() {
+        assert_eq!(
+            parse_set(&b"set a 5"[..]),
+            IResult::Done(&b""[..], Op::Set('a', Target::Value(5)))
+        );
+        assert_eq!(
+            parse_set(&b"set a b"[..]),
+            IResult::Done(&b""[..], Op::Set('a', Target::Register('b')))
+        );
+    }
+
+    #[test]
+    fn test_parser() {
+        use self::Op::*;
+        use self::Target::*;
+
+        let input = "set a 1
+add a 2
+mul a a
+mod a 5
+snd a
+set a 0
+rcv a
+jgz a -1
+set a 1
+jgz a -2";
+        let parsed: Vec<_> = input.split('\n')
+            .filter_map(|line| match parse_op(line.as_bytes()) {
+                IResult::Done(_, p) => Some(p),
+                _ => panic!("parsing failed"),
+            })
+            .collect();
+        assert_eq!(parsed, vec![
+            Set('a', Value(1)),
+            Add('a', Value(2)),
+            Mul('a', Register('a')),
+            Mod('a', Value(5)),
+            Snd(Register('a')),
+            Set('a', Value(0)),
+            Rcv('a'),
+            Jgz(Register('a'), Value(-1)),
+            Set('a', Value(1)),
+            Jgz(Register('a'), Value(-2)),
+        ]);
+    }
+}
