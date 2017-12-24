@@ -104,12 +104,81 @@ fn parse(input: &str) -> Vec<Op> {
 
 pub fn part1(input: &str) -> AppResult<u32> {
     let ops = parse(input);
-    // println!("{:?}", program);
-    Ok(Program::new(&ops, 0).run() as u32)
+    Ok(Program::new(&ops, [0; 8]).run() as u32)
 }
 
 
+pub fn part2_cpu(input: &str) -> AppResult<u32> {
+    let ops = parse(input);
+    let mut program = Program::new(&ops, [1, 0, 0, 0, 0, 0, 0, 0]);
+    program.run();
+    println!("{}", program.resolve(&Target::Register('h')));
+    Ok(0)
+}
+
 pub fn part2(_input: &str) -> AppResult<u32> {
+
+    let a = 0;
+    // let a = 1;
+    let mut b = 0;
+    let mut c = 0;
+    let mut d = 0;
+    let mut e = 0;
+    let mut f = 0;
+    let mut g = 0;
+    let mut h = 0;
+
+    // let mut mul_count = 0;
+
+    b = 65;
+    c = b;
+    if a != 0 {
+        b *= 100;
+        // mul_count += 1;
+        b += 100000;
+        c = b;
+        c += 17000;
+    }
+    loop {
+        f = 1;
+        d = 2;
+        loop {
+            e = 2;
+            loop {
+                g = d;
+                g *= e;
+                // mul_count += 1;
+                g -= b;
+                if g == 0 {
+                    f = 0;
+                }
+                e += 1;
+                g = e;
+                g -= b;
+                if g == 0 {
+                    break
+                }
+            }
+            d += 1;
+            g = d;
+            g -= b;
+            if g == 0 {
+                break;
+            }
+        }
+        if f == 0 {
+            h += 1
+        }
+        g = b;
+        g -= c;
+        if g == 0 {
+            break;
+        }
+        b += 17;
+    }
+
+    // println!("mul_count: {}", mul_count);
+    println!("h: {}", h);
     Ok(0)
 }
 
