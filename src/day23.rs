@@ -1,11 +1,9 @@
 use nom::IResult;
-use std::collections::HashMap;
 use shared::AppResult;
 use tablet::{Op, Reg, Target, parse_op};
 
 struct Program {
-    _pid: i64,
-    registers: HashMap<Reg, i64>,
+    registers: [i64; 8],
     ops: Vec<Op>,
     pc: i64,
 }
@@ -13,13 +11,26 @@ struct Program {
 impl Program {
     pub fn new(
         ops: &Vec<Op>,
-        program_id: i64,
+        registers: [i64; 8]
     ) -> Self {
         Program {
-            _pid: program_id,
             pc: 0,
             ops: ops.iter().cloned().collect(),
-            registers: HashMap::new(),
+            registers: registers,
+        }
+    }
+
+    fn _index(&self, reg: Reg) -> usize {
+        match reg {
+            'a' => 0,
+            'b' => 1,
+            'c' => 2,
+            'd' => 3,
+            'e' => 4,
+            'f' => 5,
+            'g' => 6,
+            'h' => 7,
+            _ => panic!("invalid register"),
         }
     }
 
@@ -27,8 +38,15 @@ impl Program {
         use self::Target::*;
         match target {
             Value(ref i) => *i,
-            Register(r) => *(self.registers.get(&r).unwrap_or(&0)),
+            Register(r) => {
+                let index = self._index(*r);
+                self.registers[index]
+            },
         }
+    }
+
+    fn set(&mut self, target: Reg, value: i64) {
+        self.registers[self._index(target)] = value;
     }
 
     pub fn run(&mut self) -> u32 {
@@ -38,22 +56,23 @@ impl Program {
         let mut mul_count = 0;
 
         while self.pc < self.ops.len() as i64 && self.pc >= 0 {
-            // println!("{:?}, {:?}", &self._pid, &self.ops[self.pc as usize]);
-            match &self.ops[self.pc as usize] {
+            // println!("{:?}", &self.ops[self.pc as usize]);
+            let op = &self.ops[self.pc as usize].clone();
+            match op {
                 Set(reg, t) => {
                     let value = self.resolve(&t);
-                    self.registers.insert(*reg, value);
+                    self.set(*reg, value);
                 },
                 Sub(x, t) => {
                     let xval = self.resolve(&Register(*x));
                     let tval = self.resolve(&t);
-                    self.registers.insert(*x, xval - tval);
+                    self.set(*x, xval - tval);
                 },
                 Mul(x, t) => {
                     mul_count += 1;
                     let xval = self.resolve(&Register(*x));
                     let tval = self.resolve(&t);
-                    self.registers.insert(*x, xval * tval);
+                    self.set(*x, xval * tval);
                 },
                 Jnz(x, t) => {
                     let xval = self.resolve(&x);
