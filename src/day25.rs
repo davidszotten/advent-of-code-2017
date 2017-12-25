@@ -20,26 +20,47 @@ impl Machine {
             state: State::A,
         }
     }
+
+    fn is_zero(&self) -> bool {
+        !self.ones.contains(&self.pos)
+    }
+
+    fn write(&mut self, value: usize) {
+        match value {
+            0 => {self.ones.remove(&self.pos);},
+            1 => {self.ones.insert(self.pos);},
+            _ => {panic!("invalid write value");},
+        }
+    }
+
+    fn move_right(&mut self) {
+        self.pos += 1;
+    }
+
+    fn move_left(&mut self) {
+        self.pos -= 1;
+    }
+
     pub fn step(&mut self) {
         match self.state {
             State::A => {
-                if !self.ones.contains(&self.pos) {
-                    self.ones.insert(self.pos);
-                    self.pos += 1;
+                if self.is_zero() {
+                    self.write(1);
+                    self.move_right();
                 }
                 else {
-                    self.ones.remove(&self.pos);
-                    self.pos -= 1;
+                    self.write(0);
+                    self.move_left();
                 }
                 self.state = State::B;
             },
             State::B => {
-                if !self.ones.contains(&self.pos) {
-                    self.ones.insert(self.pos);
-                    self.pos -= 1;
+                if self.is_zero() {
+                    self.write(1);
+                    self.move_left();
                 }
                 else {
-                    self.pos += 1;
+                    self.move_right();
                 }
                 self.state = State::A;
             },
@@ -49,6 +70,7 @@ impl Machine {
 
 pub fn part1(_input: &str) -> AppResult<u32> {
     let mut machine = Machine::new();
+    // for _ in 0..12386363 {
     for _ in 0..6 {
         machine.step();
     }
