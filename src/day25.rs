@@ -4,6 +4,10 @@ use shared::AppResult;
 enum State {
     A,
     B,
+    C,
+    D,
+    E,
+    F,
 }
 
 struct Machine {
@@ -47,22 +51,73 @@ impl Machine {
                 if self.is_zero() {
                     self.write(1);
                     self.move_right();
+                    self.state = State::B;
                 }
                 else {
                     self.write(0);
                     self.move_left();
+                    self.state = State::E;
                 }
-                self.state = State::B;
             },
             State::B => {
                 if self.is_zero() {
                     self.write(1);
                     self.move_left();
+                    self.state = State::C;
                 }
                 else {
+                    self.write(0);
                     self.move_right();
+                    self.state = State::A;
                 }
-                self.state = State::A;
+            },
+            State::C => {
+                if self.is_zero() {
+                    self.write(1);
+                    self.move_left();
+                    self.state = State::D;
+                }
+                else {
+                    self.write(0);
+                    self.move_right();
+                    self.state = State::C;
+                }
+            },
+            State::D => {
+                if self.is_zero() {
+                    self.write(1);
+                    self.move_left();
+                    self.state = State::E;
+                }
+                else {
+                    self.write(0);
+                    self.move_left();
+                    self.state = State::F;
+                }
+            },
+            State::E => {
+                if self.is_zero() {
+                    self.write(1);
+                    self.move_left();
+                    self.state = State::A;
+                }
+                else {
+                    self.write(1);
+                    self.move_left();
+                    self.state = State::C;
+                }
+            },
+            State::F => {
+                if self.is_zero() {
+                    self.write(1);
+                    self.move_left();
+                    self.state = State::E;
+                }
+                else {
+                    self.write(1);
+                    self.move_right();
+                    self.state = State::A;
+                }
             },
         }
     }
@@ -70,8 +125,7 @@ impl Machine {
 
 pub fn part1(_input: &str) -> AppResult<u32> {
     let mut machine = Machine::new();
-    // for _ in 0..12386363 {
-    for _ in 0..6 {
+    for _ in 0..12386363 {
         machine.step();
     }
     Ok(machine.ones.len() as u32)
